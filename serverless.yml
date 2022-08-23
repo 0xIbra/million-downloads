@@ -1,0 +1,42 @@
+org: your_orgname # more info -> serverless.com
+app: million-downloads
+service: million-downloads-60-seconds
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: eu-west-3 # AWS Region
+  memorySize: 512 # Lambda function memory (MB)
+  timeout: 60 # timeout of the function (seconds)
+
+  environment:
+    BUCKET: 'BUCKET' # Your S3 bucket if you are gonna upload to S3
+    REDIS_HOST: 'HOST' # If you are gonna use redis, put yours here.
+    REDIS_PASSWORD: 'PASSWORD' # Same as above
+
+  # If you are gonna use other AWS Services like S3, you need to give the appropriate permissions to your function.httpApi:
+  # The IAM statements below, give permission to perform all operations that the S3 client allow on a specific Bucket.
+  # So, replace "BUCKET" with your own bucket name.
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: "s3:*"
+      Resource:
+        - "arn:aws:s3:::BUCKET/*"
+        - "arn:aws:s3:::BUCKET"
+
+functions:
+  # This one is not the API version, you will have to invoke this function via AWS SDK
+  downloader:
+    name: million-downloads
+    handler: downloader.handler
+
+# Uncomment the function below if you wish to deploy the API version of the downloader
+#  downloader_api:
+#    name: downloader_api_service
+#    handler: api.handler
+#    events:
+#      - httpApi:
+#          method: POST
+#          path: /download

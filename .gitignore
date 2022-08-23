@@ -1,0 +1,14 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# Custom
+.idea/
+*.jpg
+*.zip
+*test.js
+monitor.js
+distribute.js
